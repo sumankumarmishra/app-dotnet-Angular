@@ -13,7 +13,7 @@ public class UsersController(DataContext context): ControllerBase
     public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
     {
         var users = await context.Users.ToListAsync();
-
+    
         return users;
     }
 
