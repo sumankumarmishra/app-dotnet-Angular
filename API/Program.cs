@@ -16,7 +16,7 @@ builder.Services.AddIdentityServices(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
-
+app.UseMiddleware<ExceptionMiddlware>();
 app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().
 WithOrigins("http://localhost:4200" ,"https://localhost:4200"));
 
