@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable,inject, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { User } from '../_models/user';
 import { map } from 'rxjs';
 import { LocationUpgradeModule } from '@angular/common/upgrade';
@@ -8,30 +8,30 @@ import { LocationUpgradeModule } from '@angular/common/upgrade';
   providedIn: 'root'
 })
 export class AccountService {
-  private http=inject(HttpClient);
-  baseUrl='https://localhost:5001/api/';
-  currentUser=signal<User | null>(null);
+  private http = inject(HttpClient);
+  baseUrl = 'https://localhost:5001/api/';
+  currentUser = signal<User | null>(null);
 
-  login(model:any){
-    return this.http.post<User>(this.baseUrl+'account/login',model).pipe(
-      map(user =>{
-        if(user){
-          localStorage.setItem('user',JSON.stringify(user));
+  login(model: any) {
+    return this.http.post<User>(this.baseUrl + 'account/login', model).pipe(
+      map(user => {
+        if (user) {
+          localStorage.setItem('user', JSON.stringify(user));
           this.currentUser.set(user);
         }
       })
     )
   }
-  logout(){
+  logout() {
     localStorage.removeItem('user');
     this.currentUser.set(null);
   }
 
-  register(model:any){
-    return this.http.post<User>(this.baseUrl+'account/register',model).pipe(
-      map(user =>{
-        if(user){
-          localStorage.setItem('user',JSON.stringify(user));
+  register(model: any) {
+    return this.http.post<User>(this.baseUrl + 'account/register', model).pipe(
+      map(user => {
+        if (user) {
+          localStorage.setItem('user', JSON.stringify(user));
           this.currentUser.set(user);
         }
         return user;
