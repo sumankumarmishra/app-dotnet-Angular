@@ -1,14 +1,14 @@
-using API.Extensions;
 using API.Data;
-using Microsoft.EntityFrameworkCore;
 using API.Interfaces;
 using API.Services;
+using Microsoft.EntityFrameworkCore;
 
-namespace API;
+namespace API.Extensions;
+
 public static class ApplicationServiceExtensions
 {
-    public static IServiceCollection AddApplicationServices(this IServiceCollection
-    services, IConfiguration config)
+    public static IServiceCollection AddApplicationServices(this IServiceCollection services,
+        IConfiguration config)
     {
         services.AddControllers();
         services.AddDbContext<DataContext>(opt =>
@@ -17,8 +17,9 @@ public static class ApplicationServiceExtensions
         });
         services.AddCors();
         services.AddScoped<ITokenService, TokenService>();
-        services.AddScoped<IUserRepository,UserRepository>();
-        services.AddScoped<IPhotoService,PhotoService>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IPhotoService, PhotoService>();
+        services.AddScoped<LogUserActivity>();
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
 

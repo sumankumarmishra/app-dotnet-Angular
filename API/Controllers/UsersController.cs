@@ -14,9 +14,12 @@ public class UsersController(IUserRepository userRepository, IMapper mapper,
     IPhotoService photoService) : BaseApiController
 {
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers()
+    public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers([FromQuery]UserParams userParams)
     {
-        var users = await userRepository.GetMembersAsync();
+        userParams.CurrentUsername = User.GetUsername();
+        var users = await userRepository.GetMembersAsync(userParams);
+
+        Response.AddPaginationHeader(users);
 
         return Ok(users);
     }
@@ -34,7 +37,7 @@ public class UsersController(IUserRepository userRepository, IMapper mapper,
     [HttpPut]
     public async Task<ActionResult> UpdateUser(MemberUpdateDto memberUpdateDto)
     {
-        var user = await userRepository.GetUserByUsernameAsync(User.GetUserName());
+        var user = await userRepository.GetUserByUsernameAsync(User.GetUsername());
 
         if (user == null) return BadRequest("Could not find user");
 
@@ -48,7 +51,7 @@ public class UsersController(IUserRepository userRepository, IMapper mapper,
     [HttpPost("add-photo")]
     public async Task<ActionResult<PhotoDto>> AddPhoto(IFormFile file)
     {
-        var user = await userRepository.GetUserByUsernameAsync(User.GetUserName());
+        var user = await userRepository.GetUserByUsernameAsync(User.GetUsername());
 
         if (user == null) return BadRequest("Cannot update user");
 
@@ -76,7 +79,7 @@ public class UsersController(IUserRepository userRepository, IMapper mapper,
     [HttpPut("set-main-photo/{photoId:int}")]
     public async Task<ActionResult> SetMainPhoto(int photoId)
     {
-        var user = await userRepository.GetUserByUsernameAsync(User.GetUserName());
+        var user = await userRepository.GetUserByUsernameAsync(User.GetUsername());
 
         if (user == null) return BadRequest("Could not find user");
 
@@ -96,7 +99,7 @@ public class UsersController(IUserRepository userRepository, IMapper mapper,
     [HttpDelete("delete-photo/{photoId:int}")]
     public async Task<ActionResult> DeletePhoto(int photoId)
     {
-        var user = await userRepository.GetUserByUsernameAsync(User.GetUserName());
+        var user = await userRepository.GetUserByUsernameAsync(User.GetUsername());
 
         if (user == null) return BadRequest("User not found");
 
